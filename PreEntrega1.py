@@ -22,7 +22,8 @@ df= pd.DataFrame(datalist)[['idDrink','strDrink','strCategory','strAlcoholic','s
 
 ## PRE-ENTREGA 2
 
-##Definicion de credenciales para coneccion
+##Definicion de credenciales para conexion
+
 load_dotenv()
 REDSHIFT_USER=os.getenv('REDSHIFT_USER')
 REDSHIFT_PASSWORD=os.getenv('REDSHIFT_PASSWORD')
@@ -30,31 +31,26 @@ REDSHIFT_HOST=os.getenv("REDSHIFT_HOST")
 REDSHIFT_PORT=os.getenv('REDSHIFT_PORT',5439)
 REDSHIFT_DBNAME= os.getenv('REDSHIFT_DBNAME')
 
-print(REDSHIFT_USER)
-
 ##Definicion de Valores de base de datos
 
-valores_DB= {
-    "TABLE_NAME": 'Juansaobento_CocktailsAPI',
-    "SCHEMA_NAME": 'juansaobento_coderhouse'
-}
+TABLE_NAME_RS= 'juansaobento_cocktailsapi'
+SCHEMA_NAME_RS= 'juansaobento_coderhouse'
 
-
+##Conexion a la base de datos
 
 conection_string=f"postgresql+psycopg2://{REDSHIFT_USER}:{REDSHIFT_PASSWORD}@{REDSHIFT_HOST}:{REDSHIFT_PORT}/{REDSHIFT_DBNAME}"
-print(conection_string)
 db_engine= sa.create_engine(conection_string)
 
-
+##Carga de datos a la BD de SQL 
 try:
     df.to_sql(
-        {valores_DB["TABLE_NAME"]},  
+        TABLE_NAME_RS,  
         db_engine, 
-        schema= {valores_DB["SCHEMA_NAME"]},
+        schema= SCHEMA_NAME_RS,
         if_exists='append',
         index=False)
     
 except sa.exc.SQLAlchemyError as e:
     print(f"Error ocurred while droping the table: {e}")
 except Exception as e:
-    print(e)
+   print(e)

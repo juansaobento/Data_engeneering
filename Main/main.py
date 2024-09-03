@@ -19,8 +19,9 @@ def main():
     data=response['drinks']
     datalist= pd.DataFrame(data)
     df= pd.DataFrame(datalist)[['idDrink','strDrink','strCategory','strAlcoholic','strGlass','strInstructions','strIngredient1', 'strIngredient2','strIngredient3', 'strIngredient4','strIngredient5','strIngredient6','strIngredient7','strIngredient8','strIngredient9','strIngredient10','strIngredient11','strIngredient12','strIngredient13','strIngredient14','strIngredient15','strMeasure1', 'strMeasure2', 'strMeasure3', 'strMeasure4', 'strMeasure5', 'strMeasure6', 'strMeasure7', 'strMeasure8', 'strMeasure9', 'strMeasure10', 'strMeasure11', 'strMeasure12', 'strMeasure13', 'strMeasure14', 'strMeasure15']]
-    ## Correcciones segunda pre-entrega
-    
+## Correcciones segunda pre-entrega
+    ## Creacion de una funcion que Tome los valores de Ingredientes y Medidas para crear un Diccionario
+    ##Para luego crear un Json para Usar un dato de tipo STRUCT/SUPER en RS
     def create_ingredients_json(row):
         ingredients = {}
         for i in range(1, 16):  # Assuming up to 15 ingredients
@@ -29,10 +30,15 @@ def main():
             if ingredient and measure:
                 ingredients[ingredient] = measure
         return json.dumps(ingredients)  # Convert dictionary to JSON string
-
+    
+    ##Metodo apply para recorrer el DF con la funcion previamente creada
     df['Ingredientes'] = df.apply(create_ingredients_json, axis=1)
-    df = df[['idDrink', 'strDrink', 'strCategory', 'strAlcoholic', 'strGlass', 'strInstructions', 'Ingredientes']]
-    df= df.rename(columns= {'strDrink':'Cocktail', 'strCategory':'Categoria', 'strAlcoholic':'Alcoholico', 'strGlass':'Cristaleria', 'strInstructions':'Instrucciones'})
+    
+    ##Armado del DF final
+        df = df[['idDrink', 'strDrink', 'strCategory', 'strAlcoholic', 'strGlass', 'strInstructions', 'Ingredientes']]
+        
+        ##Reemplazo de nombres del DF para que sea subido a Amazon RS
+        df= df.rename(columns= {'strDrink':'Cocktail', 'strCategory':'Categoria', 'strAlcoholic':'Alcoholico', 'strGlass':'Cristaleria', 'strInstructions':'Instrucciones'})
     df
     ## PRE-ENTREGA 2
 
